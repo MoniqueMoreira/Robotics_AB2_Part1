@@ -12,7 +12,8 @@ def Space_Work(L1 = 1, L2 = 1):
     # Ângulos para o círculo em torno do eixo Z
     theta = np.linspace(0, np.pi, 100)
     theta2 = np.linspace(-np.pi/2, np.pi, 100)
-    # Raio do círculo
+    
+    # Raio do círculos
     r = L1
     r2 = L1+L2
 
@@ -29,12 +30,8 @@ def Space_Work(L1 = 1, L2 = 1):
     ax.plot(x1, y1, z1, label='Junta 2')
 
 
-    # Defina os limites dos eixos
-    ax.set_xlim([-1.5, 1.5])
-    ax.set_ylim([-1.5, 1.5])
-    ax.set_zlim([-0.5, 0.5])
-
     # Adicione rótulos de eixo
+    ax.axis('equal')
     ax.set_xlabel('Eixo X')
     ax.set_ylabel('Eixo Y')
     ax.set_zlabel('Eixo Z')
@@ -149,3 +146,6 @@ def main():
     inkine_RR()
     T = transl(0,0.5,0)
     inkine_RR(T)
+    T = transl(5,1,0)
+    inkine_RR(T)
+

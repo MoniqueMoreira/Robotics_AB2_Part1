@@ -74,6 +74,11 @@ def Space_Work(L1 = 1, L2 = 1):
     plt.axis('equal')  # Manter proporções iguais nos eixos x e y
     plt.show()
 ```
+Chamando a função:
+
+```
+Space_Work()
+```
 **Saída:**
 
 <div style="display: flex;">
@@ -86,6 +91,21 @@ def Space_Work(L1 = 1, L2 = 1):
 Podemos ver que, como o braço é planar, ele está restrito ao plano XY, onde na figura 1 vemos a restrições da juntas e na figura 2 podemos ver os pontos que podem ser alcançados definindo **L1 = L2 = 1**, e as juntas com rotação de **$` 0 < \theta1 < \pi`$  e $` -\pi/2 < \theta2 < \pi`$**. 
 
 ### Letra B:
+Modelando o braço pela biblioteca RobotcsToolBox do Peter Corker:
+
+```
+def robot_RR(q = [0,0]):
+    PLOT = True
+    PI = np.pi
+
+    e1 = RevoluteDH(d = 0, a  = 1 )
+    e2 = RevoluteDH(a = 1 )
+
+    rob = DHRobot([e1,e2], name = 'RR')
+    #print(rob)
+    rob.teach(q)
+```
+
 Sabendo que a tabela DH do braço RR planas é:
 
 | j | θⱼ  |  dⱼ |   aⱼ   | ⍺ⱼ   |
@@ -130,9 +150,201 @@ III. $`x=L_1C_{\theta1}+L_2C_{\theta1}C_{\theta2}`$
 
 IV. $`y=L_1S_{\theta1}+L_2S_{\theta1}S_{\theta2}`$
 
+Elevando ao quadrado III e IV e somando:
+
+$`x^2+y^2=L_1^{\ \ 2}+L_2^{\ \ 2}+2L_1L_2C_{\theta 2}`$
+
+Pela definição trigonometria: 
+
+$`C_{\theta 1}C_{\theta 2}=C_{\theta 1}C_{\theta 2}-S_{\theta 1}S_{\theta 2}`$ 
+
+e
+
+$`C_{\theta 1}C_{\theta 2}=C_{\theta 1}C_{\theta 2}-S_{\theta 1}S_{\theta 2}`$
+
+$`C_{\theta} + S_{\theta} = 1`$
+
+Podemos escrever:
+
+$`C_{\theta 2}=\frac{x^2+y^2-L_1^{\ \ 2}-L_2^{\ \ 2}}{2L_1L_2}`$
+
+$`S_{\theta 2}=\pm \sqrt{1-C_{\theta 2}^{\ \ \ \ 2}}`$
+
+Isolando o ângulo: 
+
+$`\theta _2=A\tan 2(S_{\theta 2},C_{\theta 2})`$
+
+Escrevendo x e y:
+
+V. $`x=(k1)C_{\theta 1}-(k2)S_{\theta 1}`$
+
+VI. $`y=(k1)S_{\theta 1}+(k1)C_{\theta 1}`$
+
+Sendo:
+
+$`k_1=(L_1+L_2C_{\theta 2})`$,
+
+$`k_2=\ L_2S_{\theta 2}`$,
+
+$`r=\sqrt{k_1^{\ \ 2}+k_2^{\ \ 2}}`$ e
+
+$`\gamma =A\tan 2\left(k_1\ ,\ k_2\right)`$
 
 
+Ajustando k1 e k2 em função de r e $`\gamma`$, obtemos:
 
+$`k_1\ =\ r\cos \ \gamma `$
+
+$`k_2\ =\ r\cos \ \gamma `$
+
+Substituindo k1 e k2 na equações V e VI:
+
+$`\frac{x}{r}\ =\ C_{\gamma }C_{\theta 1}-\ S_{\gamma }S_{\theta 1}`$
+
+$`\frac{y}{r}\ =\ C_{\gamma }S_{\theta 1}\ +\ S_{\gamma }C_{\theta 1}`$
+
+Ajustando:
+
+$`C\left(\gamma +\ \theta 1\right)\ =\ \frac{x}{r}`$
+
+$`S\left(\gamma +\ \theta 1\right)\ =\ \frac{y}{r}`$
+
+$`\gamma+\ \theta1\ =\ A\tan2\left(\frac{y}{r},\frac{x}{e}\right)=A\tan2\left(y,x\right)`$
+
+Obtemos:
+
+$`\begin{array}{l}\theta1\ =\ A\tan2\left(y,x\right)\ -\ A\tan2\left(k_1,k_2\right)\end{array}`$
+
+Onde podemos achar $`\theta1`$ e $`\theta2`$ para a pose $`^BT_W`$.
+
+
+Aplicando isto no código: 
+
+```
+def inkine_RR(T= transl(0.5,1,0), L1=1, L2=1):
+    R = [[T[0][0], T[0][1], T[0][2]], [T[1][0], T[1][1], T[1][2]], [T[2][0], T[2][1], T[2][2]]]
+    P = [T[0][3], T[1][3], T[2][3]]
+
+    x = P[0]
+    y = P[1]
+
+    print("Pose:\n", T)
+
+    cO2 = (m.pow(x, 2) + m.pow(y, 2) - m.pow(L1, 2) - m.pow(L2, 2)) / (2 * L1 * L2)
+    
+    # Verificar se a condição é possível
+    if abs(cO2) > 1:
+        print("Configuração não é possível. Fora dos limites de alcance.")
+        return
+    
+    sO2 = m.sqrt(1 - m.pow(cO2, 2))  # Raiz positiva
+    O2 = m.atan2(sO2, cO2)
+
+    k1 = (L1 + L2 * cO2)
+    k2 = (L2 * sO2)
+    gamma = m.atan2(k2, k1)
+    r = m.sqrt(m.pow(k1, 2) + m.pow(k2, 2))
+
+    k1 = r * m.cos(gamma)
+    k2 = r * m.sin(gamma)
+
+    O1 = m.atan2(y, x) - m.atan2(k2, k1)
+    
+    # Aplicar restrições para limitar O1 e O2 aos intervalos desejados
+    O1_min = 0  # Limite inferior para O1
+    O1_max = m.pi  # Limite superior para O1
+    O2_min = -m.pi / 2  # Limite inferior para O2
+    O2_max = m.pi  # Limite superior para O2
+    
+    print('Possíveis soluções:')
+    # Verificar se os ângulos estão dentro dos limites
+    if O1_min <= O1 <= O1_max and O2_min <= O2 <= O2_max:
+        print("Solução 1:")
+        print("O1:", O1, "O2:", O2)
+        robot_RR([O1, O2])
+
+
+    sO2 = -m.sqrt(1 - m.pow(cO2, 2))  # Raiz negativa
+    O2 = m.atan2(sO2, cO2)
+
+    k1 = (L1 + L2 * cO2)
+    k2 = (L2 * sO2)
+    gamma = m.atan2(k2, k1)
+    r = m.sqrt(m.pow(k1, 2) + m.pow(k2, 2))
+
+    k1 = r * m.cos(gamma)
+    k2 = r * m.sin(gamma)
+
+    O1 = m.atan2(y, x) - m.atan2(k2, k1)
+
+    if O1_min <= O1 <= O1_max and O2_min <= O2 <= O2_max:
+        print("Solução 1:")
+        print("O1:", O1, "O2:", O2)
+        robot_RR([O1, O2])
+```
+Para os casos, temos com entrada as Pose:
+
+#### Caso 1:
+```
+inkine_RR()
+T = transl(0,0.5,0)
+inkine_RR(T)
+T = transl(5,1,0)
+inkine_RR(T)
+```
+**Saída:**
+```
+Pose:
+ [[1.  0.  0.  0.5]
+ [0.  1.  0.  1. ]
+ [0.  0.  1.  0. ]
+ [0.  0.  0.  1. ]]
+Possíveis soluções:
+Solução 1:
+O1: 0.12955216714882267 O2: 1.9551931012905357
+```
+<p align="center">
+  <a name="figura-5"></a>
+  <img src="Figure_3.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+#### Caso 2:
+```
+T = transl(0,0.5,0)
+inkine_RR(T)
+```
+**Saída:**
+```
+Pose:
+ [[1.  0.  0.  0. ]
+ [0.  1.  0.  0.5]
+ [0.  0.  1.  0. ]
+ [0.  0.  0.  1. ]]
+Possíveis soluções:
+Solução 1:
+O1: 0.2526802551420786 O2: 2.636232143305636
+```
+<p align="center">
+  <a name="figura-6"></a>
+  <img src="Figure_4.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+```
+#### Caso 2:
+```
+T = transl(5,1,0)
+inkine_RR(T)
+```
+**Saída:**
+
+```
+Pose:
+ [[1. 0. 0. 5.]
+ [0. 1. 0. 1.]
+ [0. 0. 1. 0.]
+ [0. 0. 0. 1.]]
+Configuração não é possível. Fora dos limites de alcance.
+```
+Note que para alguns para caso 3 a pose não pode ser alcançada, ja que o L1 + L2 não e capaz de alcança o ponto (5,1). Além disto por causa da limitações da juntas pode existir de conjunto de ângulos possíveis.  
 ### Letra C:
 
 ### Letra D:
