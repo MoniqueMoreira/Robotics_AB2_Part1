@@ -328,8 +328,8 @@ O1: 0.2526802551420786 O2: 2.636232143305636
   <a name="figura-6"></a>
   <img src="Figure_4.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
 </p>
-```
-#### Caso 2:
+
+#### Caso 3:
 ```
 T = transl(5,1,0)
 inkine_RR(T)
