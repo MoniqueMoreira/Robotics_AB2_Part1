@@ -347,4 +347,17 @@ Configuração não é possível. Fora dos limites de alcance.
 Note que para alguns para caso 3 a pose não pode ser alcançada, ja que o L1 + L2 não e capaz de alcança o ponto (5,1). Além disto por causa da limitações da juntas pode existir de conjunto de ângulos possíveis.  
 ### Letra C:
 
+Em um manipulador RR planar (que possui duas juntas rotativas), a orientação do efetuador final é determinada pelas posições das juntas q1 e q2 e pelas características físicas do manipulador, como os comprimentos dos elos. No entanto, diferentemente dos manipuladores robóticos com juntas rotativas e prismáticas, onde você pode especificar a orientação do efetuador como um ângulo ou uma matriz de rotação separadamente, em um manipulador RR planar, a orientação é intrinsicamente fixa já que ele está preso a plano XY.
+
 ### Letra D:
+Quando calculamos a inversa, tende a aparece 2 conjuntos posiveis de pontos graças já que $`\theta2`$ pode assumir valores negativos e positivo devido a raiz quadrada, mais em certos pontos chamados pontos singulares, só pode ser alcançados aparti de um conjunto de ângulos, isto pode acontecer quando $`\theta2`$ atinge o valores de -1 a 1, fazendo com que o braço perca um grau de liberdade, este ponto são comum nos extremos do espaço de trabalho, onde só podem ser alcançados quando $`\theta2 = \pm 90°k`$ e o braço está todo esticado L1 + L2.
+
+Mais muita vezes devido as restrições da juntas muitos pontos no espaço de trabalho só pode ser atingindo por 1 conjunto de ângulos, como visto no caso acima na Letra B, onde a outra solução acaba sendo impossível por conta da geometria do robô. 
+
+### Letra E:
+Quando a pose e inalcançavel, isto é os ponto x e y estão fora do espaço de trabalho ou os ângulos da $`\theta 1`$ e $`\theta 2`$ não estão dentro da condições inpostas pelos braço, tem que não podemos achar uma solução atraves da cinematica inversa(inkine_RR),é deve ser silalizado que aquela pose está fora de alcance.
+
+## Questão 2:
+
+
+
