@@ -287,10 +287,6 @@ Para os casos, temos com entrada as Pose:
 #### Caso 1:
 ```
 inkine_RR()
-T = transl(0,0.5,0)
-inkine_RR(T)
-T = transl(5,1,0)
-inkine_RR(T)
 ```
 **Saída:**
 ```
