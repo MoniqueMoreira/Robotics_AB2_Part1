@@ -5,7 +5,7 @@ from spatialmath.base import *
 from roboticstoolbox import ET2, DHRobot, RevoluteDH, PrismaticDH
 
 def Space_Work(L1 = 1,L2 = 1):
-    '''# Cria uma figura 3D
+    # Cria uma figura 3D
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -44,7 +44,7 @@ def Space_Work(L1 = 1,L2 = 1):
 
     ax.legend()
     plt.show()
-'''
+
 
     # Comprimentos dos elos
     L1 = 1.0  # Comprimento do primeiro elo
@@ -52,9 +52,9 @@ def Space_Work(L1 = 1,L2 = 1):
     L3 = 1.0  # Comprimento do terceiro elo
 
     # Intervalo de valores de q1, q2 e q3
-    q1_values = np.linspace(-np.pi/2, np.pi, 20)
-    q2_values = np.linspace(-np.pi/2, np.pi, 20)
-    q3_values = np.linspace(-np.pi/2, np.pi, 20)
+    q1_values = np.linspace(-np.pi/2, np.pi, 100)
+    q2_values = np.linspace(-np.pi/2, np.pi, 100)
+    q3_values = np.linspace(-np.pi/2, np.pi, 100)
 
     # Inicialize listas para armazenar as coordenadas x, y e z
     x_coords = []

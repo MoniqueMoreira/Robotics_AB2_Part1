@@ -355,5 +355,115 @@ Quando a pose e inalcançavel, isto é os ponto x e y estão fora do espaço de 
 
 ## Questão 2:
 
+### Letra A:
+
+Podemos demostra o espaço de trabalho das pata robotica RR, aparti do código abaixo, onde os pontos x, y e z são cauculados atraves da cinematica e da tabela DH:
+
+$`^0T_3 = \begin{bmatrix}
+cos(θ+90°)&-sin(θ + 90°)cos(90°)&sin(θ + 90°)sin(90°)&L*cos(θ+90°)\\
+sin(θ+90°)&cos(θ+90°)cos(90°)&-cos(θ + 90°)sin(90°)&L*sin(θ+90°)\\
+0&sin(90°)&cos(90°)&0\\
+0&0&0&1
+\end{bmatrix}
+\begin{bmatrix}cos(α)&-sin(α)cos(0°)&sin(α)sin(0°)&R*cos(α)\\
+sin(α)&cos(α)cos(0°)&-cos(α)sin(0°)&R*sin(α)\\
+0&sin(0°)&cos(0°)&0\\
+0&0&0&1
+\end{bmatrix}
+\begin{bmatrix}cos(β-90°)&-sin(β-90°)cos(0°)&sin(β-90°)sin(0°)&K*cos(β-90°)\\
+sin(β-90°)&cos(β-90°)cos(0°)&-cos(β-90°)sin(0°)&K*sin(β-90°)\\
+0&sin(0°)&cos(0°)&0\\0&0&0&1
+\end{bmatrix}`$  
+```
+def Space_Work(L1 = 1,L2 = 1):
+    # Cria uma figura 3D
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Ângulos para o círculo em torno do eixo Z
+    theta = np.linspace(-np.pi/2, np.pi, 20)
+    theta1 = np.linspace(-np.pi/2, np.pi, 20)
+    theta2 = np.linspace(-np.pi/2, np.pi, 20)
+
+    # Raio do círculos
+    r = L1
+    r1 = L1
+    r2 = L1+L2
+
+    # Coordenadas dos pontos no círculo
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    z= np.zeros_like(theta)
+    ax.plot(x, y, z, label='Junta 1')
+
+    x1 = r1 * np.cos(theta1)
+    y1 = np.zeros_like(theta1) 
+    z1 = r1 * np.sin(theta1)
+    ax.plot(x1, y1, z1, label='Junta 2')
+
+    # Coordenadas dos pontos no círculo
+    x2 = r2 * np.cos(theta2)
+    y2= r2 * np.sin(theta2)
+    z2= np.zeros_like(theta2)
+    ax.plot(x2, y2, z2, label='Junta 3')
+
+    # Adicione rótulos de eixo
+    ax.axis('equal')
+    ax.set_xlabel('Eixo X')
+    ax.set_ylabel('Eixo Y')
+    ax.set_zlabel('Eixo Z')
+
+    ax.legend()
+    plt.show()
+
+    # Inicialize listas para armazenar as coordenadas x, y e z
+    x_coords = []
+    y_coords = []
+    z_coords = []
+
+    # Calcule as coordenadas cartesianas tridimensionais para cada conjunto de valores de q1, q2 e q3
+    for q1 in theta:
+        for q2 in theta1:
+            for q3 in theta2:
+                x = -L2*m.sin(q3)*m.cos(q2)*m.sin(q1) - L2*m.cos(q3)*m.sin(q2)*m.sin(q1) - 0*m.sin(q1) - L1*m.cos(q3)*m.sin(q1)
+                y = L2*m.sin(q3)*m.cos(q2)*m.cos(q1) + L2*m.cos(q3)*m.sin(q2)*m.cos(q1) + 0*m.cos(q1) + L1*m.cos(q3)*m.cos(q1)
+                z = L2*m.sin(q3)*m.sin(q2) - L2*m.cos(q3)*m.cos(q2) + L1*m.sin(q3)
+                x_coords.append(x)
+                y_coords.append(y)
+                z_coords.append(z)
+
+    # Plote o espaço de trabalho tridimensional
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(x_coords, y_coords, z_coords, s=1, c='b', marker='.')
+    ax.set_xlabel('Coordenada X')
+    ax.set_ylabel('Coordenada Y')
+    ax.set_zlabel('Coordenada Z')
+    ax.set_title('Espaço de Trabalho do Manipulador RRR')
+    plt.show()
+```
+```
+Space_Work()
+```
+
+**Saída:**
+
+<div style="display: flex;">
+  <a name="figura7"></a>
+  <img src="Figure_8.png" alt="" style="width: 47%;">
+  <a name="figura8"></a>
+  <img src="Figure_6.png" alt="" style="width: 45%;">
+</div>
+
+Note que ao olha com mais atenção, podemos ver que exixte um região dentro da esfera que não podemos alcança devido as limitações das junta estarem entre [-pi/2, pi], isto pode ser melhor notado no circulo trigonometrico, onde a 4° quadrante(indicado pela seta) posuir menos pontos, causado um afinilamenento na região.  
+
+<div style="display: flex;">
+  <a name="figura9"></a>
+  <img src="Figure_5.png" alt="" style="width: 47%;">
+  <a name="figura10"></a>
+  <img src="Figure_7.png" alt="" style="width: 45%;">
+</div>
+
+
 
 
