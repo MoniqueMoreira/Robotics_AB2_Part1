@@ -13,7 +13,7 @@ from spatialmath.base import *
 ## Questão 1:
 
 ### Letra A:
-Sendo o espaço de trabalho do braço robô RR planar delimitado pelo comprimento dos elos L1 e L2, bem como pelas limitações de rotação das juntas, podemos visualizar a região da seguinte forma, considerando as restrições impostas: 
+Sendo o espaço de trabalho do braço robô RR planar delimitado pelo comprimento dos elos L1 e L2, bem como pelas limitações de rotação das juntas, podemos visualizar a região da seguinte forma, considerando as restrições impostas:
 ```
 def Space_Work(L1 = 1, L2 = 1):
     # Cria uma figura 3D
@@ -88,7 +88,7 @@ Space_Work()
   <img src="Figure_2.png" alt="" style="width: 45%;">
 </div>
 
-Podemos ver que, como o braço é planar, ele está restrito ao plano XY, onde na figura 1 vemos a restrições das juntas e na figura 2 podemos ver os pontos que podem ser alcançados definindo **L1 = L2 = 1**, e as com rotação de **$` 0 < \theta1 < \pi`$  e $` -\pi/2 < \theta2 < \pi`$**. 
+Podemos ver que, como o braço é planar, ele está restrito ao plano XY, onde na figura 1 vemos a restrições das juntas e na figura 2 podemos ver os pontos que podem ser alcançados definindo **L1 = L2 = 1**, e as com rotação de **$` 0 < \theta1 < \pi`$  e $` -\pi/2 < \theta2 < \pi`$**.
 
 ### Letra B:
 Modelando o braço pela biblioteca Robotics ToolBox do Peter Corker:
@@ -154,9 +154,9 @@ Elevando ao quadrado III e IV e somando:
 
 $`x^2+y^2=L_1^{\ \ 2}+L_2^{\ \ 2}+2L_1L_2C_{\theta 2}`$
 
-Pela definição trigonometria: 
+Pela definição trigonometria:
 
-$`C_{\theta 1}C_{\theta 2}=C_{\theta 1}C_{\theta 2}-S_{\theta 1}S_{\theta 2}`$ 
+$`C_{\theta 1}C_{\theta 2}=C_{\theta 1}C_{\theta 2}-S_{\theta 1}S_{\theta 2}`$
 
 e
 
@@ -170,7 +170,7 @@ $`C_{\theta 2}=\frac{x^2+y^2-L_1^{\ \ 2}-L_2^{\ \ 2}}{2L_1L_2}`$
 
 $`S_{\theta 2}=\pm \sqrt{1-C_{\theta 2}^{\ \ \ \ 2}}`$
 
-Isolando o ângulo: 
+Isolando o ângulo:
 
 $`\theta _2=A\tan 2(S_{\theta 2},C_{\theta 2})`$
 
@@ -218,7 +218,7 @@ $`\begin{array}{l}\theta1\ =\ A\tan2\left(y,x\right)\ -\ A\tan2\left(k_1,k_2\rig
 Onde podemos achar $`\theta1`$ e $`\theta2`$ para a pose $`^BT_W`$.
 
 
-Aplicando isto no código: 
+Aplicando isto no código:
 
 ```
 def inkine_RR(T= transl(0.5,1,0), L1=1, L2=1):
@@ -231,12 +231,12 @@ def inkine_RR(T= transl(0.5,1,0), L1=1, L2=1):
     print("Pose:\n", T)
 
     cO2 = (m.pow(x, 2) + m.pow(y, 2) - m.pow(L1, 2) - m.pow(L2, 2)) / (2 * L1 * L2)
-    
+   
     # Verificar se a condição é possível
     if abs(cO2) > 1:
         print("Configuração não é possível. Fora dos limites de alcance.")
         return
-    
+   
     sO2 = m.sqrt(1 - m.pow(cO2, 2))  # Raiz positiva
     O2 = m.atan2(sO2, cO2)
 
@@ -249,13 +249,13 @@ def inkine_RR(T= transl(0.5,1,0), L1=1, L2=1):
     k2 = r * m.sin(gamma)
 
     O1 = m.atan2(y, x) - m.atan2(k2, k1)
-    
+   
     # Aplicar restrições para limitar O1 e O2 aos intervalos desejados
     O1_min = 0  # Limite inferior para O1
     O1_max = m.pi  # Limite superior para O1
     O2_min = -m.pi / 2  # Limite inferior para O2
     O2_max = m.pi  # Limite superior para O2
-    
+   
     print('Possíveis soluções:')
     # Verificar se os ângulos estão dentro dos limites
     if O1_min <= O1 <= O1_max and O2_min <= O2 <= O2_max:
@@ -348,7 +348,7 @@ Em um manipulador RR planar (que possui duas juntas rotativas), a orientação d
 ### Letra D:
 Quando calculamos a inversa, tende a aparece 2 conjuntos possíveis de pontos graças, já que $`\theta2`$ pode assumir valores negativos e positivo devido à raiz quadrada, mais em certos pontos chamados pontos singulares, só pode ser alcançados a parti de um conjunto de ângulos, isto pode acontecer quando $`\theta2`$ atinge os valores de -1 a 1, fazendo com que o braço perca um grau de liberdade, este ponto são comum nos extremos do espaço de trabalho, onde só podem ser alcançados quando $`\theta2 = \pm 90°k`$ e o braço está todo esticado L1 + L2.
 
-Mais muita vezes devido às restrições das juntas, muitos pontos no espaço de trabalho só pode ser atingindo por 1 conjunto de ângulos, como visto no caso acima na Letra B, onde a outra solução acaba sendo impossível por conta da geometria do robô. 
+Mais muita vezes devido às restrições das juntas, muitos pontos no espaço de trabalho só pode ser atingindo por 1 conjunto de ângulos, como visto no caso acima na Letra B, onde a outra solução acaba sendo impossível por conta da geometria do robô.
 
 ### Letra E:
 Quando a pose e inalcançável, isto é os ponto x e y estão fora do espaço de trabalho ou os ângulos da $`\theta 1`$ e $`\theta 2`$ não estão dentro das condições impostas pelo braço, tem que não podemos achar uma solução através da cinemática inversa(inkine_RR), é deve ser sinalizado que aquela pose está fora de alcance.
@@ -397,7 +397,7 @@ def Space_Work(L1 = 1,L2 = 1):
     ax.plot(x, y, z, label='Junta 1')
 
     x1 = r1 * np.cos(theta1)
-    y1 = np.zeros_like(theta1) 
+    y1 = np.zeros_like(theta1)
     z1 = r1 * np.sin(theta1)
     ax.plot(x1, y1, z1, label='Junta 2')
 
@@ -464,7 +464,7 @@ Note que ao olha com mais atenção, podemos ver que existe uma região dentro d
   <img src="Figure_7.png" alt="" style="width: 45%;">
 </div>
 
-## Letra B: 
+## Letra B:
 
 Podendo descrever a pata robótica pela imagem:
 
@@ -502,7 +502,7 @@ $`\theta3 = Atan2(sin(\theta2), cos(\theta 2))`$
 
 Já para achar $`\theta2`$, temos que:
 
-$`\beta = Atan2(z,y)`$ e sendo pela lei dos cossenos 
+$`\beta = Atan2(z,y)`$ e sendo pela lei dos cossenos
 
 $`L2^2 = L1^2 + (\sqrt{z^2 +y^2})^2 - 2*L1*\sqrt{z^2 +y^2}cos(\phi)`$
 
@@ -537,7 +537,7 @@ def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
     return rob
 ```
 
-Aplicando em codigo para achar $`\theta1, \theta2`$ e $` \theta3`$, temos: 
+Aplicando em codigo para achar $`\theta1, \theta2`$ e $` \theta3`$, temos:
 
 ```
 def inkine_RRR(x, y, z, L1=1, L2=1):
@@ -550,7 +550,7 @@ def inkine_RRR(x, y, z, L1=1, L2=1):
     So = m.sqrt(1 - Co**2) # Raiz Positiva
     o3 = m.atan2(So, Co)
 
-    So1 = -m.sqrt(1 - Co**2) # Raiz Negativa 
+    So1 = -m.sqrt(1 - Co**2) # Raiz Negativa
     o31 = m.atan2(So1, Co)
 
     b = m.atan2(z, y)
@@ -600,7 +600,7 @@ rob = robot_RRR()
 </p>
 
 Posição zero das juntas.
-### Caso 1: 
+### Caso 1:
 
 ```
 inkine_RRR(x=0, y=1,z =0)
@@ -609,7 +609,7 @@ rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
 ```
 **Saída:**
 ```
-Possivéis soluções:
+Possíveis soluções:
 θ1= 0.0 θ2= -1.994827366285637 θ3= 3.989654732571274
 θ1= 0.0 θ2= 1.0471975511965976 θ3= -0.5235987755982991
 
@@ -632,7 +632,7 @@ Já o resultado da inkine da biblioteca e semelhante, dado, por causa arrendamen
   <img src="Figure_15.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
 </p>
 
-### Caso 2: 
+### Caso 2:
 
 ```
 inkine_RRR(x=0,y=0.5,z=-0.5)
@@ -661,6 +661,197 @@ Da mesma forma que no caso 2, que podemos obter 2 soluções possíveis para che
   <img src="Figure_18.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
 </p>
 
-Aqui também é possível ver que existe um grande erro devido aos arrendondamento, onde o ponto desejado é x=0,y=0.5,z=-0.5. 
+Aqui também é possível ver que existe um grande erro devido aos arrendondamento, onde o ponto desejado é x=0,y=0.5,z=-0.5.
 
 # Questão 3:
+Semelhante a que questão anterior, podemos desenvolver a inkine do Scara de forma trigonométrica ilustrado abaixo:
+
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_19.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+Dividindo o problema em duas partes, sendo $`\theta1`$ e $`\theta2`$ um braço planar RR, temos pela lei dos cossenos que:
+
+$` (\sqrt{x^2 +y^2})^2 = L1^2 + L2^2 - 2*L1*L2os(180° - \theta2) `$
+
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_20.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+Deixando em função de $`cos(\theta3)`$
+
+$`cos(\theta2) = \frac{x^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
+
+Usando a função trigonométrica:
+
+$`cos(\theta)^2 + sin(\theta)^2 = 1`$
+
+Temos:
+
+$`sin(\theta2) = \sqrt{1 - Cos(\theta2)^2}`$
+
+$`\theta2 = Atan2(sin(\theta2), cos(\theta 2))`$
+
+Já para achar $`\theta2`$, temos que:
+
+$`\beta = Atan2(x,y)`$ usando novamente a lei dos cossenos podemos achar $`\phi`$:
+
+$`L2^2 = L1^2 + (\sqrt{x^2 +y^2})^2 - 2*L1*\sqrt{x^2 +y^2}cos(\phi)`$
+
+Deixando em função de $`\phi`$:
+
+$`cos(\phi) = \frac{x^2 +y^2 + L1^2 - L2^2}{2*L1*\sqrt{x^2 +y^2}}`$
+
+Usando a função trigonométrica:
+
+$`sin(\phi) = \sqrt{1 - Cos(\phi)^2}`$
+
+$`\phi = Atan2(sin(\phi), cos(\phi))`$
+
+Já para achar D3, temos que:
+
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_21.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+$`-z = - D2 + D3 + D4 `$
+
+Então, $`D3 = -z - D4 + D2`$
+
+É por último, como $`\theta4`$ só influencia na rotação do atuador, temos que:
+
+$`\theta4 = 0°`$
+
+Aplicando no código:
+
+```
+def inkine_Scara(x, y, z, L1=1, L2=1, D2 =0.2 , D4 = 0.2):
+    Co = (y**2 + x**2 - L1**2 - L2**2)/(2*L1*L2)
+
+    if abs(Co) > 1:
+        print("-1 < Cos theta > 1")
+        return None
+
+    So = m.sqrt(1 - Co**2) # Raiz Positiva
+    o2 = m.atan2(So, Co)
+
+    So = -m.sqrt(1 - Co**2) # Raiz Negativa
+    o21 = m.atan2(So, Co)
+
+    b = m.atan2(y, x)
+    r = m.sqrt(y**2 + x**2)
+   
+    if r == 0:
+        Cp = 0
+    else:
+        Cp = (y**2 + x**2 + L1**2 - L2**2)/(2*L1*r)
+
+    if abs(Cp) > 1 :
+        print("-1 < Cos phi > 1")
+        return None
+
+    Sp = m.sqrt(1 - Cp**2)
+    p = m.atan2(Sp, Cp)
+
+    if o2 > 0:
+        o1 = b - p
+        o11 = b + p
+    else:
+        o1 = b + p
+        o11 = b - p
+
+    d3 = -z - D4 + D2
+   
+    o4 = 0
+
+    print("Possíveis soluções:")
+
+    print('θ1=',o1,'θ2=',o2,'D3=',d3,'θ4=',o4)
+    q = [o1,o2,d3,o4]
+    robot_Scara(q = q)
+
+    print('θ1=',o11,'θ2=',o21,'D3=',d3,'θ4=',o4)
+    q = [o11,o21,d3,o4]
+    robot_Scara(q = q)
+```
+
+Modelando o robô  atraves da ToolBox:
+
+```
+def robot_Scara(q = [0,0,0.5,0],L1=1,L2=1,D1=0.2,D3=[0,1],D4=0.2):
+
+    e1 = RevoluteDH(a = L1,d = D1)
+    e2 = RevoluteDH(a = L2,alpha = PI)
+    e3 = PrismaticDH(qlim = D3)
+    e4 =  RevoluteDH(d = D4)
+    rob = DHRobot([e1,e2,e3,e4], name = 'RRPR')
+   
+    rob.teach(q)
+```
+#### Caso 1:
+
+```
+inkine_Scara(x = 1,y = 1, z = -1)
+```
+**Saída:**
+```
+Possíveis soluções:
+θ1= -1.1102230246251565e-16 θ2= 1.5707963267948966 D3= 1.0 θ4= 0
+
+θ1= 1.5707963267948966 θ2= -1.5707963267948966 D3= 1.0 θ4= 0
+```
+
+<div style="display: flex;">
+  <a name="figura11"></a>
+  <img src="Figure_22.png" alt="" style="width: 47%;">
+  <a name="figura12"></a>
+  <img src="Figure_23.png" alt="" style="width: 45%;">
+</div>
+
+#### Caso 2:
+
+```
+inkine_Scara(x = 0,y = 0.5, z = -1)
+```
+**Saída:**
+```
+Possivéis soluções:
+θ1= 0.2526802551420786 θ2= 2.636232143305636 D3= 1.0 θ4= 0
+
+θ1= 2.8889123984477143 θ2= -2.636232143305636 D3= 1.0 θ4= 0
+
+```
+
+<div style="display: flex;">
+  <a name="figura11"></a>
+  <img src="Figure_24.png" alt="" style="width: 47%;">
+  <a name="figura12"></a>
+  <img src="Figure_25.png" alt="" style="width: 45%;">
+</div>
+
+#### Caso 3:
+
+```
+inkine_Scara(x = 0.5,y = 0, z = -0.5)
+```
+**Saída:**
+```
+Possivéis soluções:
+θ1= -1.318116071652818 θ2= 2.636232143305636 D3= 0.5 θ4= 0
+
+θ1= 1.318116071652818 θ2= -2.636232143305636 D3= 0.5 θ4= 0
+
+```
+
+<div style="display: flex;">
+  <a name="figura11"></a>
+  <img src="Figure_26.png" alt="" style="width: 47%;">
+  <a name="figura12"></a>
+  <img src="Figure_27.png" alt="" style="width: 45%;">
+</div>
+
+Vemos que para todos os casos acimas, existem duas possíveis soluções, no caso "cotovelo para baixo" e "cotovelo para cima", como as juntas não estão delimitadas, só existe a condição de o ponto exista dentro do espaço de trabalho, para ser possível representar a pose final.
+

@@ -68,4 +68,6 @@ def robot_Scara(q = [0,0,0.5,0],L1=1,L2=1,D1=0.2,D3=[0,1],D4=0.2):
 
 
 def main():
-    inkine_Scara(x = -1,y = -1, z = -1)
+    inkine_Scara(x = 1,y = 1, z = -1)
+    inkine_Scara(x = 0,y = 0.5, z = -1)
+    inkine_Scara(x = 0.5,y = 0, z = -0.5)
