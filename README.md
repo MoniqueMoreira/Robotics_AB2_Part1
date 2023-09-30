@@ -464,6 +464,197 @@ Note que ao olha com mais atenção, podemos ver que exixte um região dentro da
   <img src="Figure_7.png" alt="" style="width: 45%;">
 </div>
 
+## Letra B: 
+
+Podendo descrever a pata robotica pela imagem:
+
+<div style="display: flex;">
+  <a name="figura9"></a>
+  <img src="Figure_10.png" alt="" style="width: 47%;">
+  <a name="figura10"></a>
+  <img src="Figure_9.png" alt="" style="width: 45%;">
+</div>
+
+Assim pelo metódo geometrico podemos descobrir $`\theta1, \theta2`$ e $` \theta3`$ a inkine por:
+
+Pela Lei dos cossenos:
+
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_11.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
 
 
+$` (\sqrt{z^2 +y^2})^2 = L1^2 + L2^2 - 2*L1*L2os(180° - \theta3) `$
+Deixando em função de $`cos(\theta3)`$
 
+$`cos(\theta3) = \frac{z^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
+
+Usando a função trigonometrica:
+
+$`sin(\theta3) = \sqrt{1 - Cos(\theta3)^2}`$
+
+$`\theta3 = Atan2(sin(\theta2), cos(\theta 2))`$
+
+Já para achar $`\theta2`$, temos que:
+
+$`\beta = Atan2(z,y)`$ e sendo pela leis dos cossenos 
+
+$`L2^2 = L1^2 + (\sqrt{z^2 +y^2})^2 - 2*L1*\sqrt{z^2 +y^2}cos(\phi)`$
+
+$`cos(\phi) = \frac{z^2 +y^2 + L1^2 - L2^2}{2*L1*\sqrt{z^2 +y^2}}`$
+
+Usando a função trigonometrica:
+
+$`sin(\phi) = \sqrt{1 - Cos(\phi)^2}`$
+
+$`\phi = Atan2(sin(\phi), cos(\phi))`$
+
+Portanto:
+
+$`\theta1 =\beta + \phi `$
+
+É para achar $`\theta 1`$:
+
+$`\theta1 = Atan2(y,x)`$
+
+Modelando a pata por meio da toolbox do Peter Corker:
+
+```
+def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
+
+    e1 = RevoluteDH(d = 0, alpha = PI/2, offset = PI/2)
+    e2 = RevoluteDH(a = L1)
+    e3 = RevoluteDH(a = L2,offset = -PI/2)
+
+    rob = DHRobot([e1,e2,e3], name = 'RRR')
+    #print(rob)
+    rob.teach(q)
+    return rob
+```
+
+Aplicando em codigo para achar $`\theta1, \theta2`$ e $` \theta3`$, temos: 
+
+```
+def inkine_RRR(x, y, z, L1=1, L2=1):
+    Co = (y**2 + z**2 - L1**2 - L2**2)/(2*L1*L2)
+
+    if abs(Co) > 1:
+        print("-1 < Cos theta > 1")
+        return None
+
+    So = m.sqrt(1 - Co**2) # Raiz Positiva
+    o3 = m.atan2(So, Co)
+
+    So1 = -m.sqrt(1 - Co**2) # Raiz Negativa 
+    o31 = m.atan2(So1, Co)
+
+    b = m.atan2(z, y)
+
+    Cp = (y**2 + z**2 + L1**2 - L2**2)/(2*L1*m.sqrt(y**2 + z**2))
+    if abs(Cp) > 1 :
+        print("-1 < Cos phi > 1")
+        return None
+
+    Sp = m.sqrt(1 - Cp**2)
+    p = m.atan2(Sp, Cp)
+
+
+    if o3 > 0:
+        o2 = b - p
+        o21 = b + p
+    else:
+        o2 = b + p
+        o21 = b - p
+
+    o1 = m.atan2(y/m.sqrt(x**2 + y**2), x/m.sqrt(x**2 + y**2))
+
+    print("Possivéis soluções:")
+    if abs(o1 - PI/2) > m.pi/2 or abs(o2) > m.pi/2 or abs(o3+PI/2) > m.pi/2:
+        print('θ1=',o1- PI/2,'θ2=',o2,'θ3=',o3+PI/2)
+        q = [o1 - PI/2,o21,o31 + PI/2]
+        robot_RRR(q = q)
+        if abs(o1) > m.pi/2 or abs(o21) > m.pi/2 or abs(o31) > m.pi/2:
+            print('θ1=',o1- PI/2,'θ2=',o21,'θ3=',o31+PI/2)
+            q = [o1 - PI/2,o2,o3 + PI/2]
+            robot_RRR(q = q)
+    else:
+        print("Não há solução dentro do intervalo -π/2 < θ1, θ2, θ3 < π/2")
+        return None
+```
+
+## Letra C:
+
+Ultiliza a inkine_RRR( ), desenvolvida no itém anterior podemos achar os ângulos atraves de x, y, e z disposto no espaço de trabalho e comparando com a inkine da biblioteca ToolBox
+
+```
+rob = robot_RRR()
+```
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_12.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+Posição zero das juntas.
+### Caso 1: 
+
+```
+inkine_RRR(x=0, y=1,z =0)
+print(rob.ikine_LM(transl(x=0, y=1,z =0)))
+rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
+```
+**Saída:**
+```
+Possivéis soluções:
+θ1= 0.0 θ2= -1.994827366285637 θ3= 3.989654732571274
+θ1= 0.0 θ2= 1.0471975511965976 θ3= -0.5235987755982991
+
+Solução da Biblioteca:
+IKSolution: q=[-0.1495, 0.9527, -0.6337], success=False, reason=iteration and search limit reached, iterations=3000, searches=100, residual=1.27
+```
+<div style="display: flex;">
+  <a name="figura11"></a>
+  <img src="Figure_13.png" alt="" style="width: 47%;">
+  <a name="figura12"></a>
+  <img src="Figure_14.png" alt="" style="width: 45%;">
+</div>
+
+Note que para uma entrada x = 0, y = 1 , z  = 0  existe duas solução possiveis, sendo "joelho para cima" e "joelho para baixo", e ambas estão dentro do espaço de trabalho de -π/2 < θ1, θ2, θ3 < π/2.
+
+Já o resultado da inkine da biblioteca e semelhante, dado, por causa arrendamento dos senos e cosenos ela acaba perdendo um pouco de precisão, como visto na saída abaixo, que deveria ser ponto x = 0, y = 1 e z = 0, ele retorna o ponto x = 0.133, y = 0.883 e z = -0.135:
+
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_15.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+### Caso 2: 
+
+```
+inkine_RRR(x=0,y=0.5,z=-0.5)
+print(rob.ikine_LM(transl(x=0,y=0.5,z=-0.5)))
+rob = robot_RRR(q=[-1.368, -2.779, 4.182])
+```
+**Saída:**
+```
+Possivéis soluções:
+θ1= 0.0 θ2= -1.994827366285637 θ3= 3.989654732571274
+θ1= 0.0 θ2= 0.4240310394907405 θ3= -0.848062078981481
+
+IKSolution: q=[-5.337, 0.06209, 5.271], success=False, reason=iteration and search limit reached, iterations=3000, searches=100, residual=1.33
+```
+<div style="display: flex;">
+  <a name="figura11"></a>
+  <img src="Figure_16.png" alt="" style="width: 47%;">
+  <a name="figura12"></a>
+  <img src="Figure_17.png" alt="" style="width: 45%;">
+</div>
+
+Da mesma forma que no caso 2, que podemos obter 2 soluções possiveis para chega no ponto.
+
+<p align="center">
+  <a name="figura-11"></a>
+  <img src="Figure_18.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
+</p>
+
+Aqui também é possivel ver que existe um grande erro por causa dos arrendodamento, onde o ponto desejado é x=0,y=0.5,z=-0.5, mais retorna o ponto correto. 

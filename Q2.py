@@ -146,11 +146,11 @@ def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
 def main():
     #Space_Work()
     rob = robot_RRR()
-
-    #inkine_RRR(x=0, y=1,z =0)
+    '''
+    inkine_RRR(x=0, y=1,z =0)
     print(rob.ikine_LM(transl(x=0, y=1,z =0)))
-    rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
+    rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])'''
     
-    inkine_RRR(x=0,y=0.5,z=-0.5)
+    #inkine_RRR(x=0,y=0.5,z=-0.5)
     print(rob.ikine_LM(transl(x=0,y=0.5,z=-0.5)))
-    rob = robot_RRR(q=[-1.368, -2.779, 4.182])
+    rob = robot_RRR(q=[-1.359, 3.489, -2.096])
