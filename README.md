@@ -20,7 +20,7 @@ def Space_Work(L1 = 1, L2 = 1):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    # Ângulos para o círculo em torno do eixo Z
+    #  ngulos para o círculo em torno do eixo Z
     theta = np.linspace(0, np.pi, 100)
     theta2 = np.linspace(-np.pi/2, np.pi, 100)
     # Raio do círculo
@@ -88,10 +88,10 @@ Space_Work()
   <img src="Figure_2.png" alt="" style="width: 45%;">
 </div>
 
-Podemos ver que, como o braço é planar, ele está restrito ao plano XY, onde na figura 1 vemos a restrições da juntas e na figura 2 podemos ver os pontos que podem ser alcançados definindo **L1 = L2 = 1**, e as juntas com rotação de **$` 0 < \theta1 < \pi`$  e $` -\pi/2 < \theta2 < \pi`$**. 
+Podemos ver que, como o braço é planar, ele está restrito ao plano XY, onde na figura 1 vemos a restrições das juntas e na figura 2 podemos ver os pontos que podem ser alcançados definindo **L1 = L2 = 1**, e as com rotação de **$` 0 < \theta1 < \pi`$  e $` -\pi/2 < \theta2 < \pi`$**. 
 
 ### Letra B:
-Modelando o braço pela biblioteca RobotcsToolBox do Peter Corker:
+Modelando o braço pela biblioteca Robotics ToolBox do Peter Corker:
 
 ```
 def robot_RR(q = [0,0]):
@@ -113,7 +113,7 @@ Sabendo que a tabela DH do braço RR planas é:
 | 1 | q1  |  0  |   L1   | 0.0° |
 | 2 | q2  |  0  |   L2   | 0.0° |
 
-Podemos calcular a Pose final da base até o atuador pela transformações:
+Podemos calcular a Pose final da base até o atuador pelas transformações:
 
 $`^jT_{j+1}=\begin{bmatrix}\cos \theta _j&-\sin \theta _j\cos \alpha _j&\sin \theta _j\sin \alpha _j&a_j\cos \theta _j\\
 \sin \theta _j&\cos \theta _j\cos \alpha _j&-\cos \theta _j\sin \alpha _j&a_j\sin \theta _j\\
@@ -197,7 +197,7 @@ $`k_1\ =\ r\cos \ \gamma `$
 
 $`k_2\ =\ r\cos \ \gamma `$
 
-Substituindo k1 e k2 na equações V e VI:
+Substituindo k1 e k2 nas equações V e VI:
 
 $`\frac{x}{r}\ =\ C_{\gamma }C_{\theta 1}-\ S_{\gamma }S_{\theta 1}`$
 
@@ -340,24 +340,24 @@ Pose:
  [0. 0. 0. 1.]]
 Configuração não é possível. Fora dos limites de alcance.
 ```
-Note que para alguns para caso 3 a pose não pode ser alcançada, ja que o L1 + L2 não e capaz de alcança o ponto (5,1). Além disto por causa da limitações da juntas pode existir de conjunto de ângulos possíveis.  
+Note que para alguns para caso 3 a pose não pode ser alcançada, já que o L1 + L2 não é capaz de alcança o ponto (5,1). Além disto, devido às limitações das juntas, pode existir de conjunto de ângulos possíveis.  
 ### Letra C:
 
-Em um manipulador RR planar (que possui duas juntas rotativas), a orientação do efetuador final é determinada pelas posições das juntas q1 e q2 e pelas características físicas do manipulador, como os comprimentos dos elos. No entanto, diferentemente dos manipuladores robóticos com juntas rotativas e prismáticas, onde você pode especificar a orientação do efetuador como um ângulo ou uma matriz de rotação separadamente, em um manipulador RR planar, a orientação é intrinsicamente fixa já que ele está preso a plano XY.
+Em um manipulador RR planar (que possui duas juntas rotativas), a orientação do efetuador final é determinada pelas posições das juntas q1 e q2 e pelas características físicas do manipulador, como os comprimentos dos elos. No entanto, diferentemente dos manipuladores robóticos com juntas rotativas e prismáticas, onde você pode especificar a orientação do efetuador como um ângulo ou uma matriz de rotação separadamente, em um manipulador RR planar, a orientação é intrinsecamente fixa já que ele está preso a plano XY.
 
 ### Letra D:
-Quando calculamos a inversa, tende a aparece 2 conjuntos posiveis de pontos graças já que $`\theta2`$ pode assumir valores negativos e positivo devido a raiz quadrada, mais em certos pontos chamados pontos singulares, só pode ser alcançados aparti de um conjunto de ângulos, isto pode acontecer quando $`\theta2`$ atinge o valores de -1 a 1, fazendo com que o braço perca um grau de liberdade, este ponto são comum nos extremos do espaço de trabalho, onde só podem ser alcançados quando $`\theta2 = \pm 90°k`$ e o braço está todo esticado L1 + L2.
+Quando calculamos a inversa, tende a aparece 2 conjuntos possíveis de pontos graças, já que $`\theta2`$ pode assumir valores negativos e positivo devido à raiz quadrada, mais em certos pontos chamados pontos singulares, só pode ser alcançados a parti de um conjunto de ângulos, isto pode acontecer quando $`\theta2`$ atinge os valores de -1 a 1, fazendo com que o braço perca um grau de liberdade, este ponto são comum nos extremos do espaço de trabalho, onde só podem ser alcançados quando $`\theta2 = \pm 90°k`$ e o braço está todo esticado L1 + L2.
 
-Mais muita vezes devido as restrições da juntas muitos pontos no espaço de trabalho só pode ser atingindo por 1 conjunto de ângulos, como visto no caso acima na Letra B, onde a outra solução acaba sendo impossível por conta da geometria do robô. 
+Mais muita vezes devido às restrições das juntas, muitos pontos no espaço de trabalho só pode ser atingindo por 1 conjunto de ângulos, como visto no caso acima na Letra B, onde a outra solução acaba sendo impossível por conta da geometria do robô. 
 
 ### Letra E:
-Quando a pose e inalcançavel, isto é os ponto x e y estão fora do espaço de trabalho ou os ângulos da $`\theta 1`$ e $`\theta 2`$ não estão dentro da condições inpostas pelos braço, tem que não podemos achar uma solução atraves da cinematica inversa(inkine_RR),é deve ser silalizado que aquela pose está fora de alcance.
+Quando a pose e inalcançável, isto é os ponto x e y estão fora do espaço de trabalho ou os ângulos da $`\theta 1`$ e $`\theta 2`$ não estão dentro das condições impostas pelo braço, tem que não podemos achar uma solução através da cinemática inversa(inkine_RR), é deve ser sinalizado que aquela pose está fora de alcance.
 
 ## Questão 2:
 
 ### Letra A:
 
-Podemos demostra o espaço de trabalho das pata robotica RR, aparti do código abaixo, onde os pontos x, y e z são cauculados atraves da cinematica e da tabela DH:
+Podemos demostra o espaço de trabalho da pata robótica RR, a parti do código abaixo, onde os pontos x, y e z são calculados através da cinemática e da tabela DH:
 
 $`^0T_3 = \begin{bmatrix}
 cos(θ+90°)&-sin(θ + 90°)cos(90°)&sin(θ + 90°)sin(90°)&L*cos(θ+90°)\\
@@ -380,7 +380,7 @@ def Space_Work(L1 = 1,L2 = 1):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    # Ângulos para o círculo em torno do eixo Z
+    #  ngulos para o círculo em torno do eixo Z
     theta = np.linspace(-np.pi/2, np.pi, 20)
     theta1 = np.linspace(-np.pi/2, np.pi, 20)
     theta2 = np.linspace(-np.pi/2, np.pi, 20)
@@ -455,7 +455,7 @@ Space_Work()
   <img src="Figure_6.png" alt="" style="width: 45%;">
 </div>
 
-Note que ao olha com mais atenção, podemos ver que exixte um região dentro da esfera que não podemos alcança devido as limitações das junta estarem entre [-pi/2, pi], isto pode ser melhor notado no circulo trigonometrico, onde a 4° quadrante(indicado pela seta) posuir menos pontos, causado um afinilamenento na região.  
+Note que ao olha com mais atenção, podemos ver que existe uma região dentro da esfera que não podemos alcançar devido às limitações das junta estarem entre [-pi/2, pi], isto pode ser melhor notado no círculo trigonométrico, onde a 4.º quadrante(indicado pela seta) possuir menos pontos, causado um afunilamento na região.  
 
 <div style="display: flex;">
   <a name="figura9"></a>
@@ -466,7 +466,7 @@ Note que ao olha com mais atenção, podemos ver que exixte um região dentro da
 
 ## Letra B: 
 
-Podendo descrever a pata robotica pela imagem:
+Podendo descrever a pata robótica pela imagem:
 
 <div style="display: flex;">
   <a name="figura9"></a>
@@ -475,7 +475,7 @@ Podendo descrever a pata robotica pela imagem:
   <img src="Figure_9.png" alt="" style="width: 45%;">
 </div>
 
-Assim pelo metódo geometrico podemos descobrir $`\theta1, \theta2`$ e $` \theta3`$ a inkine por:
+Assim, pelo método geométrico podemos descobrir $`\theta1, \theta2`$ e $` \theta3`$ a inkine por:
 
 Pela Lei dos cossenos:
 
@@ -490,7 +490,11 @@ Deixando em função de $`cos(\theta3)`$
 
 $`cos(\theta3) = \frac{z^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
 
-Usando a função trigonometrica:
+Usando a função trigonométrica:
+
+$`cos(\theta)^2 + sin(\theta)^2 = 1`$
+
+Temos:
 
 $`sin(\theta3) = \sqrt{1 - Cos(\theta3)^2}`$
 
@@ -498,13 +502,13 @@ $`\theta3 = Atan2(sin(\theta2), cos(\theta 2))`$
 
 Já para achar $`\theta2`$, temos que:
 
-$`\beta = Atan2(z,y)`$ e sendo pela leis dos cossenos 
+$`\beta = Atan2(z,y)`$ e sendo pela lei dos cossenos 
 
 $`L2^2 = L1^2 + (\sqrt{z^2 +y^2})^2 - 2*L1*\sqrt{z^2 +y^2}cos(\phi)`$
 
 $`cos(\phi) = \frac{z^2 +y^2 + L1^2 - L2^2}{2*L1*\sqrt{z^2 +y^2}}`$
 
-Usando a função trigonometrica:
+Usando a função trigonométrica:
 
 $`sin(\phi) = \sqrt{1 - Cos(\phi)^2}`$
 
@@ -518,7 +522,7 @@ $`\theta1 =\beta + \phi `$
 
 $`\theta1 = Atan2(y,x)`$
 
-Modelando a pata por meio da toolbox do Peter Corker:
+Modelando a pata por meio da Toolbox do Peter Corker:
 
 ```
 def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
@@ -619,9 +623,9 @@ IKSolution: q=[-0.1495, 0.9527, -0.6337], success=False, reason=iteration and se
   <img src="Figure_14.png" alt="" style="width: 45%;">
 </div>
 
-Note que para uma entrada x = 0, y = 1 , z  = 0  existe duas solução possiveis, sendo "joelho para cima" e "joelho para baixo", e ambas estão dentro do espaço de trabalho de -π/2 < θ1, θ2, θ3 < π/2.
+Note que para uma entrada x = 0, y = 1 , z  = 0  existem duas soluções possíveis, sendo "joelho para cima" e "joelho para baixo", e ambas estão dentro do espaço de trabalho de -π/2 < θ1, θ2, θ3 < π/2.
 
-Já o resultado da inkine da biblioteca e semelhante, dado, por causa arrendamento dos senos e cosenos ela acaba perdendo um pouco de precisão, como visto na saída abaixo, que deveria ser ponto x = 0, y = 1 e z = 0, ele retorna o ponto x = 0.133, y = 0.883 e z = -0.135:
+Já o resultado da inkine da biblioteca e semelhante, dado, por causa arrendamento dos senos e cossenos ela acaba perdendo um pouco de precisão, como visto na saída abaixo, que deveria ser ponto x = 0, y = 1 e z = 0, ele retorna o ponto x = 0.133, y = 0.883 e z = -0.135:
 
 <p align="center">
   <a name="figura-11"></a>
@@ -650,11 +654,13 @@ IKSolution: q=[-5.337, 0.06209, 5.271], success=False, reason=iteration and sear
   <img src="Figure_17.png" alt="" style="width: 45%;">
 </div>
 
-Da mesma forma que no caso 2, que podemos obter 2 soluções possiveis para chega no ponto.
+Da mesma forma que no caso 2, que podemos obter 2 soluções possíveis para chegar no ponto.
 
 <p align="center">
   <a name="figura-11"></a>
   <img src="Figure_18.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
 </p>
 
-Aqui também é possivel ver que existe um grande erro por causa dos arrendodamento, onde o ponto desejado é x=0,y=0.5,z=-0.5, mais retorna o ponto correto. 
+Aqui também é possível ver que existe um grande erro devido aos arrendondamento, onde o ponto desejado é x=0,y=0.5,z=-0.5. 
+
+# Questão 3:
