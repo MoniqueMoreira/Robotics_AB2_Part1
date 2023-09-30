@@ -66,7 +66,7 @@ def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
 def main():
     rob = robot_RRR()
 
-    #inkine_RRR(x=0, y=1,z =0)
+    inkine_RRR(x=0, y=1,z =0)
     print(rob.ikine_LM(transl(x=0, y=1,z =0)))
     rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
     
