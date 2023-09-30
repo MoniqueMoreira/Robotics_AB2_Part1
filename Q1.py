@@ -65,87 +65,73 @@ def Space_Work(L1 = 1, L2 = 1):
     plt.axis('equal')  # Manter proporções iguais nos eixos x e y
     plt.show()
 
-def robot_RR(q = [0,0]):
-    PLOT = True
-    PI = np.pi
+def inkine_RRR(x, y, z, L1=1, L2=1):
+    Co = (y**2 + z**2 - L1**2 - L2**2)/(2*L1*L2)
 
-    e1 = RevoluteDH(d = 0, a  = 1 )
-    e2 = RevoluteDH(a = 1 )
+    if abs(Co) > 1:
+        print("-1 < Cos theta > 1")
+        return None
 
-    rob = DHRobot([e1,e2], name = 'RR')
+    So = m.sqrt(1 - Co**2) # Raiz Positiva
+    o3 = m.atan2(So, Co)
+
+    So1 = -m.sqrt(1 - Co**2) # Raiz Negativa 
+    o31 = m.atan2(So1, Co)
+
+    b = m.atan2(z, y)
+
+    Cp = (y**2 + z**2 + L1**2 - L2**2)/(2*L1*m.sqrt(y**2 + z**2))
+    if abs(Cp) > 1 :
+        print("-1 < Cos phi > 1")
+        return None
+
+    Sp = m.sqrt(1 - Cp**2)
+    p = m.atan2(Sp, Cp)
+
+
+    if o3 > 0:
+        o2 = b - p
+        o21 = b + p
+    else:
+        o2 = b + p
+        o21 = b - p
+
+    o1 = m.atan2(y/m.sqrt(x**2 + y**2), x/m.sqrt(x**2 + y**2))
+
+    print("Possivéis soluções:")
+    if abs(o1 - PI/2) > m.pi/2 or abs(o2) > m.pi/2 or abs(o3+PI/2) > m.pi/2:
+        print('θ1=',o1- PI/2,'θ2=',o2,'θ3=',o3+PI/2)
+        q = [o1 - PI/2,o21,o31 + PI/2]
+        robot_RRR(q = q)
+        if abs(o1) > m.pi/2 or abs(o21) > m.pi/2 or abs(o31) > m.pi/2:
+            print('θ1=',o1- PI/2,'θ2=',o21,'θ3=',o31+PI/2)
+            q = [o1 - PI/2,o2,o3 + PI/2]
+            robot_RRR(q = q)
+    else:
+        print("Não há solução dentro do intervalo -π/2 < θ1, θ2, θ3 < π/2")
+        return None
+
+def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
+
+    e1 = RevoluteDH(d = 0, alpha = PI/2, offset = PI/2)
+    e2 = RevoluteDH(a = L1)
+    e3 = RevoluteDH(a = L2,offset = -PI/2)
+
+    rob = DHRobot([e1,e2,e3], name = 'RRR')
     #print(rob)
     rob.teach(q)
-
-def inkine_RR(T= transl(0.5,1,0), L1=1, L2=1):
-    R = [[T[0][0], T[0][1], T[0][2]], [T[1][0], T[1][1], T[1][2]], [T[2][0], T[2][1], T[2][2]]]
-    P = [T[0][3], T[1][3], T[2][3]]
-
-    x = P[0]
-    y = P[1]
-
-    print("Pose:\n", T)
-
-    cO2 = (m.pow(x, 2) + m.pow(y, 2) - m.pow(L1, 2) - m.pow(L2, 2)) / (2 * L1 * L2)
-    
-    # Verificar se a condição é possível
-    if abs(cO2) > 1:
-        print("Configuração não é possível. Fora dos limites de alcance.")
-        return
-    
-    sO2 = m.sqrt(1 - m.pow(cO2, 2))  # Raiz positiva
-    O2 = m.atan2(sO2, cO2)
-
-    k1 = (L1 + L2 * cO2)
-    k2 = (L2 * sO2)
-    gamma = m.atan2(k2, k1)
-    r = m.sqrt(m.pow(k1, 2) + m.pow(k2, 2))
-
-    k1 = r * m.cos(gamma)
-    k2 = r * m.sin(gamma)
-
-    O1 = m.atan2(y, x) - m.atan2(k2, k1)
-    
-    # Aplicar restrições para limitar O1 e O2 aos intervalos desejados
-    O1_min = 0  # Limite inferior para O1
-    O1_max = m.pi  # Limite superior para O1
-    O2_min = -m.pi / 2  # Limite inferior para O2
-    O2_max = m.pi  # Limite superior para O2
-    
-    print('Possíveis soluções:')
-    # Verificar se os ângulos estão dentro dos limites
-    if O1_min <= O1 <= O1_max and O2_min <= O2 <= O2_max:
-        print("Solução 1:")
-        print("O1:", O1, "O2:", O2)
-        robot_RR([O1, O2])
-
-
-    sO2 = -m.sqrt(1 - m.pow(cO2, 2))  # Raiz negativa
-    O2 = m.atan2(sO2, cO2)
-
-    k1 = (L1 + L2 * cO2)
-    k2 = (L2 * sO2)
-    gamma = m.atan2(k2, k1)
-    r = m.sqrt(m.pow(k1, 2) + m.pow(k2, 2))
-
-    k1 = r * m.cos(gamma)
-    k2 = r * m.sin(gamma)
-
-    O1 = m.atan2(y, x) - m.atan2(k2, k1)
-
-    if O1_min <= O1 <= O1_max and O2_min <= O2 <= O2_max:
-        print("Solução 1:")
-        print("O1:", O1, "O2:", O2)
-        robot_RR([O1, O2])
-
-
-
-
+    return rob
 
 def main():
-    Space_Work()
-    inkine_RR()
-    T = transl(0,0.5,0)
-    inkine_RR(T)
-    T = transl(5,1,0)
-    inkine_RR(T)
+    #Space_Work()
+    rob = robot_RRR()
+
+    inkine_RRR(x=0, y=1,z =0)
+    print(rob.ikine_LM(transl(x=0, y=1,z =0)))
+    rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
+    
+    inkine_RRR(x=0,y=0.5,z=-0.5)
+    print(rob.ikine_LM(transl(x=0,y=0.5,z=-0.5)))
+    rob = robot_RRR(q=[-1.368, -2.779, 4.182])
+
 
