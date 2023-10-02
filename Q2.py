@@ -2,20 +2,19 @@ import math as m
 import numpy as np
 import matplotlib.pyplot as plt
 from spatialmath.base import *
-from roboticstoolbox import ET2, DHRobot, RevoluteDH, PrismaticDH
+from roboticstoolbox import DHRobot, RevoluteDH, PrismaticDH
 
-PLOT = True
 PI = np.pi
 
-def Space_Work(L1 = 1,L2 = 1):
+def Space_Work(L1 = 0.15,L2 = 0.15):
     # Cria uma figura 3D
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
     # Ângulos para o círculo em torno do eixo Z
-    theta = np.linspace(-np.pi/2, np.pi, 100)
-    theta1 = np.linspace(-np.pi/2, np.pi, 100)
-    theta2 = np.linspace(-np.pi/2, np.pi, 100)
+    theta = np.linspace(-np.pi/2, np.pi, 20)
+    theta1 = np.linspace(-np.pi/2, np.pi, 20)
+    theta2 = np.linspace(-np.pi/2, np.pi, 20)
 
     # Raio do círculos
     r = L1
@@ -49,28 +48,20 @@ def Space_Work(L1 = 1,L2 = 1):
     plt.show()
 
 
-    # Comprimentos dos elos
-    L1 = 1.0  # Comprimento do primeiro elo
-    L2 = 1.0  # Comprimento do segundo elo
-    L3 = 1.0  # Comprimento do terceiro elo
-
-    # Intervalo de valores de q1, q2 e q3
-    q1_values = np.linspace(-np.pi/2, np.pi, 100)
-    q2_values = np.linspace(-np.pi/2, np.pi, 100)
-    q3_values = np.linspace(-np.pi/2, np.pi, 100)
-
     # Inicialize listas para armazenar as coordenadas x, y e z
     x_coords = []
     y_coords = []
     z_coords = []
 
     # Calcule as coordenadas cartesianas tridimensionais para cada conjunto de valores de q1, q2 e q3
-    for q1 in q1_values:
-        for q2 in q2_values:
-            for q3 in q3_values:
-                x = -L2*m.sin(q3)*m.cos(q2)*m.sin(q1) - L2*m.cos(q3)*m.sin(q2)*m.sin(q1) - 0*m.sin(q1) - L1*m.cos(q3)*m.sin(q1)
-                y = L2*m.sin(q3)*m.cos(q2)*m.cos(q1) + L2*m.cos(q3)*m.sin(q2)*m.cos(q1) + 0*m.cos(q1) + L1*m.cos(q3)*m.cos(q1)
-                z = L2*m.sin(q3)*m.sin(q2) - L2*m.cos(q3)*m.cos(q2) + L1*m.sin(q3)
+    for q1 in theta:
+        for q2 in theta1:
+            for q3 in theta2:
+
+                x = -L2*m.cos(q2)*m.sin(q1)-L1*m.sin(q3)*m.cos(q2)*m.sin(q1)-L1*m.cos(q3)*m.sin(q2)*m.sin(q1)
+                y = L2*m.cos(q2)*m.cos(q1)+L1*m.sin(q3)*m.cos(q2)*m.cos(q1)+L1*m.cos(q3)*m.sin(q2)*m.cos(q1)
+                z = L2*m.sin(q2)+L1*m.sin(q3)*m.sin(q2)-L1*m.cos(q3)*m.cos(q2)
+
                 x_coords.append(x)
                 y_coords.append(y)
                 z_coords.append(z)
@@ -87,6 +78,7 @@ def Space_Work(L1 = 1,L2 = 1):
 
 
 def inkine_RRR(x, y, z, L1=0.15, L2=0.15):
+    cont = 0
     Co = (y**2 + z**2 - L1**2 - L2**2)/(2*L1*L2)
 
     if abs(Co) > 1:
@@ -128,14 +120,16 @@ def inkine_RRR(x, y, z, L1=0.15, L2=0.15):
     if abs(o1 - PI/2) > m.pi/2 or abs(o2) > m.pi/2 or abs(o3+PI/2) > m.pi/2:
         
         print('θ1=',o1- PI/2,'θ2=',o2,'θ3=',o3+PI/2)
-        q = [o1 - PI/2,o21,o31 + PI/2]
+        q = [o1 - PI/2,o2,o3 + PI/2]
         robot_RRR(q = q)
-        
-        if abs(o1) > m.pi/2 or abs(o21) > m.pi/2 or abs(o31) > m.pi/2:
+        cont= +1
+    
+    if abs(o1) > m.pi/2 or abs(o21) > m.pi/2 or abs(o31) > m.pi/2:
             print('θ1=',o1- PI/2,'θ2=',o21,'θ3=',o31+PI/2)
-            q = [o1 - PI/2,o2,o3 + PI/2]
+            q = [o1 - PI/2,o21,o31 + PI/2]
             robot_RRR(q = q)
-    else:
+            cont=+1
+    if cont ==0:
         print("Não há solução dentro do intervalo -π/2 < θ1, θ2, θ3 < π/2")
         return None
 
@@ -151,13 +145,33 @@ def robot_RRR(q = [0,0,0],L1 = 0.15,L2 = 0.15):
     return rob
 
 def main():
-    #Space_Work()
+    Space_Work()
     rob = robot_RRR()
 
-    inkine_RRR(x=0, y=1,z =0)
-    print(rob.ikine_LM(transl(x=0, y=1,z =0)))
-    rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
+    inkine_RRR(x=0, y=0.15,z =0)
     
-    #inkine_RRR(x=0,y=0.5,z=-0.5)
-    print(rob.ikine_LM(transl(x=0,y=0.5,z=-0.5)))
-    rob = robot_RRR(q=[-1.359, 3.489, -2.096])
+    # Cinemática inversa
+    P = rob.fkine(q = [0.0,-1.0471975511965976,3.6651914291880923])
+    print('Pose =\n', P)
+    sol = rob.ikine_LM(P)
+    print('Solução da Biblioteca:\n',sol)
+    
+    P = rob.fkine(q = [0.0,1.0471975511965976,-0.5235987755982991])
+    print('Pose =\n', P)
+    sol = rob.ikine_LM(P)
+    print('Solução da Biblioteca:\n',sol)
+    
+    
+    inkine_RRR(x=0,y=0.07,z=-0.07)
+
+    # Cinemática inversa
+    P = rob.fkine(q = [0.0,-2.0199087495022043,4.039817499004409])
+    print('Pose =\n', P)
+    sol = rob.ikine_LM(P)
+    print('Solução da Biblioteca:\n',sol)
+    
+    P = rob.fkine(q = [0.0,0.4491124227073078,-0.8982248454146156])
+    print('Pose =\n', P)
+    sol = rob.ikine_LM(P)
+    print('Solução da Biblioteca:\n',sol)
+    

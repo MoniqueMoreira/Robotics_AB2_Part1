@@ -475,9 +475,9 @@ Podendo descrever a pata robótica pela imagem:
   <img src="Figure_9.png" alt="" style="width: 45%;">
 </div>
 
-Assim, pelo método geométrico podemos descobrir $`\theta1, \theta2`$ e $` \theta3`$ a inkine por:
+Olhando para plano ZY, podemos ver que a pata do robô se comporta com um RR planar,assim, pelo método geométrico podemos descobrir $`\theta1, \theta2`$ e $` \theta3`$ a inkine por:
 
-Pela Lei dos cossenos:
+Aplicando a Lei dos cossenos no triangulo superior:
 
 <p align="center">
   <a name="figura-11"></a>
@@ -486,6 +486,7 @@ Pela Lei dos cossenos:
 
 
 $` (\sqrt{z^2 +y^2})^2 = L1^2 + L2^2 - 2*L1*L2os(180° - \theta3) `$
+
 Deixando em função de $`cos(\theta3)`$
 
 $`cos(\theta3) = \frac{z^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
@@ -525,7 +526,7 @@ $`\theta1 = Atan2(y,x)`$
 Modelando a pata por meio da Toolbox do Peter Corker:
 
 ```
-def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
+def robot_RRR(q = [0,0,0],L1 = 0.15,L2 = 0.15):
 
     e1 = RevoluteDH(d = 0, alpha = PI/2, offset = PI/2)
     e2 = RevoluteDH(a = L1)
@@ -540,7 +541,7 @@ def robot_RRR(q = [0,0,0],L1 = 1,L2 = 1):
 Aplicando em codigo para achar $`\theta1, \theta2`$ e $` \theta3`$, temos:
 
 ```
-def inkine_RRR(x, y, z, L1=1, L2=1):
+def inkine_RRR(x, y, z, L1=0.15, L2=0.15):
     Co = (y**2 + z**2 - L1**2 - L2**2)/(2*L1*L2)
 
     if abs(Co) > 1:
@@ -550,12 +551,17 @@ def inkine_RRR(x, y, z, L1=1, L2=1):
     So = m.sqrt(1 - Co**2) # Raiz Positiva
     o3 = m.atan2(So, Co)
 
-    So1 = -m.sqrt(1 - Co**2) # Raiz Negativa
+    So1 = -m.sqrt(1 - Co**2) # Raiz Negativa 
     o31 = m.atan2(So1, Co)
 
     b = m.atan2(z, y)
 
-    Cp = (y**2 + z**2 + L1**2 - L2**2)/(2*L1*m.sqrt(y**2 + z**2))
+    r = m.sqrt(y**2 + z**2)
+    if r == 0:
+        Cp = 0
+    else:
+        Cp = (y**2 + z**2 + L1**2 - L2**2)/(2*L1*r)
+
     if abs(Cp) > 1 :
         print("-1 < Cos phi > 1")
         return None
@@ -571,13 +577,15 @@ def inkine_RRR(x, y, z, L1=1, L2=1):
         o2 = b + p
         o21 = b - p
 
-    o1 = m.atan2(y/m.sqrt(x**2 + y**2), x/m.sqrt(x**2 + y**2))
+    o1 = m.atan2(y, x)
 
     print("Possivéis soluções:")
     if abs(o1 - PI/2) > m.pi/2 or abs(o2) > m.pi/2 or abs(o3+PI/2) > m.pi/2:
+        
         print('θ1=',o1- PI/2,'θ2=',o2,'θ3=',o3+PI/2)
         q = [o1 - PI/2,o21,o31 + PI/2]
         robot_RRR(q = q)
+        
         if abs(o1) > m.pi/2 or abs(o21) > m.pi/2 or abs(o31) > m.pi/2:
             print('θ1=',o1- PI/2,'θ2=',o21,'θ3=',o31+PI/2)
             q = [o1 - PI/2,o2,o3 + PI/2]
@@ -604,8 +612,8 @@ Posição zero das juntas.
 
 ```
 inkine_RRR(x=0, y=1,z =0)
-print(rob.ikine_LM(transl(x=0, y=1,z =0)))
-rob = robot_RRR( q=[-0.1495, 0.9527, -0.6337])
+
+
 ```
 **Saída:**
 ```
@@ -613,8 +621,22 @@ Possíveis soluções:
 θ1= 0.0 θ2= -1.994827366285637 θ3= 3.989654732571274
 θ1= 0.0 θ2= 1.0471975511965976 θ3= -0.5235987755982991
 
+Pose =
+    0         0         1         0       
+   0.5      -0.866     0         0.15    
+   0.866     0.5       0         0       
+   0         0         0         1       
+
 Solução da Biblioteca:
-IKSolution: q=[-0.1495, 0.9527, -0.6337], success=False, reason=iteration and search limit reached, iterations=3000, searches=100, residual=1.27
+ IKSolution: q=[0, -1.047, -2.618], success=True, iterations=5, searches=1, residual=7.41e-11
+Pose =
+    0         0         1         0       
+   0.5       0.866     0         0.15    
+  -0.866     0.5       0         0       
+   0         0         0         1       
+
+Solução da Biblioteca:
+ IKSolution: q=[0, 1.047, -0.5236], success=True, iterations=15, searches=1, residual=2.97e-09
 ```
 <div style="display: flex;">
   <a name="figura11"></a>
@@ -623,45 +645,91 @@ IKSolution: q=[-0.1495, 0.9527, -0.6337], success=False, reason=iteration and se
   <img src="Figure_14.png" alt="" style="width: 45%;">
 </div>
 
-Note que para uma entrada x = 0, y = 1 , z  = 0  existem duas soluções possíveis, sendo "joelho para cima" e "joelho para baixo", e ambas estão dentro do espaço de trabalho de -π/2 < θ1, θ2, θ3 < π/2.
+Através da do q encontrado, podemos conferir se nossa inkine está correta comparando com a inkine da toolbox, onde calculando a Pose através dos ângulos encontrados anteriomente, podemos a calcular a inversa com a função ikine_LM(Pose)
+```
+# Cinemática inversa
+P = rob.fkine(q = [0.0,-1.0471975511965976,3.6651914291880923])
+print('Pose =\n', P)
+sol = rob.ikine_LM(P)
+print('Solução da Biblioteca:\n',sol)
 
-Já o resultado da inkine da biblioteca e semelhante, dado, por causa arrendamento dos senos e cossenos ela acaba perdendo um pouco de precisão, como visto na saída abaixo, que deveria ser ponto x = 0, y = 1 e z = 0, ele retorna o ponto x = 0.133, y = 0.883 e z = -0.135:
+P = rob.fkine(q = [0.0,1.0471975511965976,-0.5235987755982991])
+print('Pose =\n', P)
+sol = rob.ikine_LM(P)
+print('Solução da Biblioteca:\n',sol)
+```
+**Saída:**
+```
+Pose =
+    0         0         1         0       
+   0.5      -0.866     0         0.15    
+   0.866     0.5       0         0       
+   0         0         0         1       
 
-<p align="center">
-  <a name="figura-11"></a>
-  <img src="Figure_15.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
-</p>
+Solução da Biblioteca:
+ IKSolution: q=[0, -1.047, -2.618], success=True, iterations=5, searches=1, residual=7.41e-11
+Pose =
+    0         0         1         0       
+   0.5       0.866     0         0.15    
+  -0.866     0.5       0         0       
+   0         0         0         1       
 
+Solução da Biblioteca:
+ IKSolution: q=[0, 1.047, -0.5236], success=True, iterations=15, searches=1, residual=2.97e-09
+```
+Note que obtermos os mesmo ângulo encontrados anteriomente, provando que nossa implementação, também note que para a função ikine_LM, é necessário enviar uma pose, não só as coordenada de x,y,z, pois nesta função ele também computar a orientação final, influenciando nos ângulos resualtante, no caso que só foi passado uma Pose qualquer sem rotação através da P = transl(x,y,z), obteve um grande erro na pose final, já que ele tente orienta a o atuador para que os ângulos sejam correspondentes a da pose inicial, no caso $`cos(\phi) = 0`$ 
 ### Caso 2:
 
 ```
-inkine_RRR(x=0,y=0.5,z=-0.5)
+inkine_RRR(x=0,y=0.07,z=-0.07)
 print(rob.ikine_LM(transl(x=0,y=0.5,z=-0.5)))
 rob = robot_RRR(q=[-1.368, -2.779, 4.182])
 ```
 **Saída:**
 ```
 Possivéis soluções:
-θ1= 0.0 θ2= -1.994827366285637 θ3= 3.989654732571274
-θ1= 0.0 θ2= 0.4240310394907405 θ3= -0.848062078981481
-
-IKSolution: q=[-5.337, 0.06209, 5.271], success=False, reason=iteration and search limit reached, iterations=3000, searches=100, residual=1.33
+θ1= 0.0 θ2= -2.0199087495022043 θ3= 4.039817499004409
+θ1= 0.0 θ2= 0.4491124227073078 θ3= -0.8982248454146156
 ```
 <div style="display: flex;">
   <a name="figura11"></a>
-  <img src="Figure_16.png" alt="" style="width: 47%;">
+  <img src="Figure_15.png" alt="" style="width: 47%;">
   <a name="figura12"></a>
-  <img src="Figure_17.png" alt="" style="width: 45%;">
+  <img src="Figure_16.png" alt="" style="width: 45%;">
 </div>
 
-Da mesma forma que no caso 2, que podemos obter 2 soluções possíveis para chegar no ponto.
+Dá mesma forma que no caso 1:
+```
+# Cinemática inversa
+P = rob.fkine(q = [0.0,-2.0199087495022043,4.039817499004409])
+print('Pose =\n', P)
+sol = rob.ikine_LM(P)
+print('Solução da Biblioteca:\n',sol)
 
-<p align="center">
-  <a name="figura-11"></a>
-  <img src="Figure_18.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
-</p>
+P = rob.fkine(q = [0.0,0.4491124227073078,-0.8982248454146156])
+print('Pose =\n', P)
+sol = rob.ikine_LM(P)
+print('Solução da Biblioteca:\n',sol)
+```
+**Saída:**
+```
+Pose =
+    0         0         1         0       
+   0.9008   -0.4342    0         0.07    
+   0.4342    0.9008    0        -0.07    
+   0         0         0         1       
 
-Aqui também é possível ver que existe um grande erro devido aos arrendondamento, onde o ponto desejado é x=0,y=0.5,z=-0.5.
+Solução da Biblioteca:
+ IKSolution: q=[0, -2.02, -2.243], success=True, iterations=6, searches=1, residual=1.01e-08
+Pose =
+    0         0         1         0       
+  -0.4342    0.9008    0         0.07    
+  -0.9008   -0.4342    0        -0.07    
+   0         0         0         1       
+
+Solução da Biblioteca:
+ IKSolution: q=[0, 0.4491, -0.8982], success=True, iterations=7, searches=1, residual=2.22e-07
+```
 
 # Questão 3:
 Semelhante a que questão anterior, podemos desenvolver a inkine do Scara de forma trigonométrica ilustrado abaixo:
