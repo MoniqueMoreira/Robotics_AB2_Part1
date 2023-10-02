@@ -922,4 +922,3 @@ Possivéis soluções:
 </div>
 
 Vemos que para todos os casos acimas, existem duas possíveis soluções, no caso "cotovelo para baixo" e "cotovelo para cima", como as juntas não estão delimitadas, só existe a condição de o ponto exista dentro do espaço de trabalho, para ser possível representar a pose final.
-
