@@ -428,6 +428,21 @@ sin(β-90°)&cos(β-90°)cos(0°)&-cos(β-90°)sin(0°)&K*sin(β-90°)\\
 0&sin(0°)&cos(0°)&0\\0&0&0&1
 \end{bmatrix}`$  
 
+$`^0T_3=\begin{bmatrix}-\sin\left(θ\right)&0&\cos\left(θ\right)\ &0\\
+\cos(θ)&0&\sin(\theta)&0\\
+0&1&0&0\\
+0&0&0&1\end{bmatrix}\begin{bmatrix}\cos(\beta)&-\sin(\beta)&0&K*\cos(α)\\
+\sin(\beta)&\cos(\beta&0&K*\sin(α)\\
+0&0&1&0\\
+0&0&0&1\end{bmatrix}\begin{bmatrix}\sin(\alpha)&\cos(\alpha)&0&L*\sin(\alpha)\\
+-\cos(\alpha)&\sin(\alpha)&0&L*\cos\left(\alpha\right)\\
+0&0&1&0\\
+0&0&0&1\end{bmatrix}`$
+
+$`^0T_{3=}\begin{bmatrix}-\sin(α)\cos(β)\sin(θ)-\cos(α)\sin(β)\sin(θ)&\sin(α)\sin(β)\sin(θ)-\cos(α)\cos(β)\sin(θ)&\cos(θ)&-K\cos(β)\sin(θ)-L\sin(α)\cos(β)\sin(θ)-L\cos(α)\sin(β)\sin(θ)\\
+\sin(α)\cos(β)\cos(θ)+\cos(α)\sin(β)\cos(θ)&\cos(α)\cos(β)\cos(θ)-\sin(α)\sin(β)\cos(θ)&\sin(θ)&K\cos(β)\cos(θ)+L\sin(α)\cos(β)\cos(θ)+L\cos(α)\sin(β)\cos(θ)\\
+\sin(α)\sin(β)-\cos(α)\cos(β)&\sin(α)\cos(β)+\cos(α)\sin(β)&0&K\sin(β)+L\sin(α)\sin(β)-L\cos(α)\cos(β)\\
+0&0&0&1\end{bmatrix}`$
 Portanto:
 ```
 x = -Kcos(β)sin(θ)-Lsin(α)cos(β)sin(θ)-Lcos(α)sin(β)sin(θ)
