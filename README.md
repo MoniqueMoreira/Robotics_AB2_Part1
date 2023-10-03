@@ -241,6 +241,7 @@ $`\frac{y}{r}\ =\ C_{\gamma }S_{\theta 1}\ +\ S_{\gamma }C_{\theta 1}`$
 Ajustando:
 
 <div align="center">
+
 $`C\left(\gamma +\ \theta 1\right)\ =\ \frac{x}{r}`$
 
 $`S\left(\gamma +\ \theta 1\right)\ =\ \frac{y}{r}`$
