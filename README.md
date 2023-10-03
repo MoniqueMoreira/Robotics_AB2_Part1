@@ -142,6 +142,8 @@ S_{\phi}&C_{\phi}&0&y\\
 
 Sendo x e y,  o ponto no plano XY que o atuador está localizado, igualando as poses obtemos as equações:
 
+<div align="center">
+
 I. $`S_{\phi}=S_{\theta1}S_{\theta2}`$
 
 II. $`C_{\phi}=C_{\theta1}C_{\theta2}`$
@@ -150,11 +152,19 @@ III. $`x=L_1C_{\theta1}+L_2C_{\theta1}C_{\theta2}`$
 
 IV. $`y=L_1S_{\theta1}+L_2S_{\theta1}S_{\theta2}`$
 
+</div>
+
 Elevando ao quadrado III e IV e somando:
+
+<div align="center">
 
 $`x^2+y^2=L_1^{\ \ 2}+L_2^{\ \ 2}+2L_1L_2C_{\theta 2}`$
 
+</div>
+
 Pela definição trigonometria:
+
+<div align="center">
 
 $`C_{\theta 1}C_{\theta 2}=C_{\theta 1}C_{\theta 2}-S_{\theta 1}S_{\theta 2}`$
 
@@ -162,25 +172,41 @@ e
 
 $`C_{\theta 1}C_{\theta 2}=C_{\theta 1}C_{\theta 2}-S_{\theta 1}S_{\theta 2}`$
 
-$`C_{\theta} + S_{\theta} = 1`$
+$`C_{\theta}^2 + S_{\theta}^2 = 1`$
+
+</div>
 
 Podemos escrever:
+
+<div align="center">
 
 $`C_{\theta 2}=\frac{x^2+y^2-L_1^{\ \ 2}-L_2^{\ \ 2}}{2L_1L_2}`$
 
 $`S_{\theta 2}=\pm \sqrt{1-C_{\theta 2}^{\ \ \ \ 2}}`$
 
+</div>
+
 Isolando o ângulo:
+
+<div align="center">
 
 $`\theta _2=A\tan 2(S_{\theta 2},C_{\theta 2})`$
 
+</div>
+
 Escrevendo x e y:
+
+<div align="center">
 
 V. $`x=(k1)C_{\theta 1}-(k2)S_{\theta 1}`$
 
 VI. $`y=(k1)S_{\theta 1}+(k1)C_{\theta 1}`$
 
+</div>
+
 Sendo:
+
+<div align="center">
 
 $`k_1=(L_1+L_2C_{\theta 2})`$,
 
@@ -190,30 +216,46 @@ $`r=\sqrt{k_1^{\ \ 2}+k_2^{\ \ 2}}`$ e
 
 $`\gamma =A\tan 2\left(k_1\ ,\ k_2\right)`$
 
+</div>
 
 Ajustando k1 e k2 em função de r e $`\gamma`$, obtemos:
+
+<div align="center">
 
 $`k_1\ =\ r\cos \ \gamma `$
 
 $`k_2\ =\ r\cos \ \gamma `$
 
+</div>
+
 Substituindo k1 e k2 nas equações V e VI:
+
+<div align="center">
 
 $`\frac{x}{r}\ =\ C_{\gamma }C_{\theta 1}-\ S_{\gamma }S_{\theta 1}`$
 
 $`\frac{y}{r}\ =\ C_{\gamma }S_{\theta 1}\ +\ S_{\gamma }C_{\theta 1}`$
 
+</div>
+
 Ajustando:
 
+<div align="center">
 $`C\left(\gamma +\ \theta 1\right)\ =\ \frac{x}{r}`$
 
 $`S\left(\gamma +\ \theta 1\right)\ =\ \frac{y}{r}`$
 
 $`\gamma+\ \theta1\ =\ A\tan2\left(\frac{y}{r},\frac{x}{e}\right)=A\tan2\left(y,x\right)`$
 
+</div>
+
 Obtemos:
 
+<div align="center">
+
 $`\begin{array}{l}\theta1\ =\ A\tan2\left(y,x\right)\ -\ A\tan2\left(k_1,k_2\right)\end{array}`$
+
+</div>
 
 Onde podemos achar $`\theta1`$ e $`\theta2`$ para a pose $`^BT_W`$.
 
@@ -359,6 +401,16 @@ Quando a pose e inalcançável, isto é os ponto x e y estão fora do espaço de
 
 Podemos demostra o espaço de trabalho da pata robótica RR, a parti do código abaixo, onde os pontos x, y e z são calculados através da cinemática e da tabela DH:
 
+| j | θⱼ  |  dⱼ |   aⱼ   | ⍺ⱼ   |
+| --|-----|-----|--------|------|
+| 1 | θ1 + 90°|  0  |   0   | 90.0° |
+| 2 | θ2  |  0  |   L1   | 0.0° |
+| 2 | θ3 - 90° |  0  |   L2   | 0.0° |
+
+Sendo θ1 = θ ,θ2 =α e θ1 = β, além disto L1 = K e L2 = L, para facilitar as contas no wolfram , temos:
+
+$`^0T_3 = ^0T_1*^1T_2*^2T_3`$
+
 $`^0T_3 = \begin{bmatrix}
 cos(θ+90°)&-sin(θ + 90°)cos(90°)&sin(θ + 90°)sin(90°)&L*cos(θ+90°)\\
 sin(θ+90°)&cos(θ+90°)cos(90°)&-cos(θ + 90°)sin(90°)&L*sin(θ+90°)\\
@@ -374,6 +426,13 @@ sin(α)&cos(α)cos(0°)&-cos(α)sin(0°)&R*sin(α)\\
 sin(β-90°)&cos(β-90°)cos(0°)&-cos(β-90°)sin(0°)&K*sin(β-90°)\\
 0&sin(0°)&cos(0°)&0\\0&0&0&1
 \end{bmatrix}`$  
+
+Portanto:
+```
+x = -Kcos(β)sin(θ)-Lsin(α)cos(β)sin(θ)-Lcos(α)sin(β)sin(θ)
+y = Kcos(β)cos(θ)+Lsin(α)cos(β)cos(θ)+Lcos(α)sin(β)cos(θ)
+z = Ksin(β)+Lsin(α)sin(β)-Lcos(α)cos(β)
+```
 ```
 def Space_Work(L1 = 1,L2 = 1):
     # Cria uma figura 3D
@@ -484,44 +543,81 @@ Aplicando a Lei dos cossenos no triangulo superior:
   <img src="Figure_11.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
 </p>
 
+<div align="center">
 
 $` (\sqrt{z^2 +y^2})^2 = L1^2 + L2^2 - 2*L1*L2os(180° - \theta3) `$
 
+</div>
+
 Deixando em função de $`cos(\theta3)`$
+
+<div align="center">
 
 $`cos(\theta3) = \frac{z^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
 
+</div>
+
 Usando a função trigonométrica:
+
+<div align="center">
 
 $`cos(\theta)^2 + sin(\theta)^2 = 1`$
 
+</div>
+
 Temos:
+
+<div align="center">
 
 $`sin(\theta3) = \sqrt{1 - Cos(\theta3)^2}`$
 
 $`\theta3 = Atan2(sin(\theta2), cos(\theta 2))`$
 
+</div>
+
 Já para achar $`\theta2`$, temos que:
 
-$`\beta = Atan2(z,y)`$ e sendo pela lei dos cossenos
+<div align="center">
+
+$`\beta = Atan2(z,y)`$ 
+
+</div>
+
+E sendo pela lei dos cossenos no trinagulo inferior:
+
+<div align="center">
 
 $`L2^2 = L1^2 + (\sqrt{z^2 +y^2})^2 - 2*L1*\sqrt{z^2 +y^2}cos(\phi)`$
 
 $`cos(\phi) = \frac{z^2 +y^2 + L1^2 - L2^2}{2*L1*\sqrt{z^2 +y^2}}`$
 
+</div>
+
 Usando a função trigonométrica:
+
+<div align="center">
 
 $`sin(\phi) = \sqrt{1 - Cos(\phi)^2}`$
 
 $`\phi = Atan2(sin(\phi), cos(\phi))`$
 
+</div>
+
 Portanto:
+
+<div align="center">
 
 $`\theta1 =\beta + \phi `$
 
+</div>
+
 É para achar $`\theta 1`$:
 
+<div align="center">
+
 $`\theta1 = Atan2(y,x)`$
+
+</div>
 
 Modelando a pata por meio da Toolbox do Peter Corker:
 
@@ -750,33 +846,62 @@ $` (\sqrt{x^2 +y^2})^2 = L1^2 + L2^2 - 2*L1*L2os(180° - \theta2) `$
 
 Deixando em função de $`cos(\theta3)`$
 
+<div align="center">
+
 $`cos(\theta2) = \frac{x^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
 
+</div>
 Usando a função trigonométrica:
+
+<div align="center">
 
 $`cos(\theta)^2 + sin(\theta)^2 = 1`$
 
+</div>
+
 Temos:
+
+<div align="center">
 
 $`sin(\theta2) = \sqrt{1 - Cos(\theta2)^2}`$
 
 $`\theta2 = Atan2(sin(\theta2), cos(\theta 2))`$
 
+</div>
+
 Já para achar $`\theta2`$, temos que:
 
-$`\beta = Atan2(x,y)`$ usando novamente a lei dos cossenos podemos achar $`\phi`$:
+<div align="center">
+
+$`\beta = Atan2(x,y)`$ 
+
+</div>
+
+Usando novamente a lei dos cossenos podemos achar $`\phi`$:
+
+<div align="center">
 
 $`L2^2 = L1^2 + (\sqrt{x^2 +y^2})^2 - 2*L1*\sqrt{x^2 +y^2}cos(\phi)`$
 
+</div>
+
 Deixando em função de $`\phi`$:
+
+<div align="center">
 
 $`cos(\phi) = \frac{x^2 +y^2 + L1^2 - L2^2}{2*L1*\sqrt{x^2 +y^2}}`$
 
+</div>
+
 Usando a função trigonométrica:
+
+<div align="center">
 
 $`sin(\phi) = \sqrt{1 - Cos(\phi)^2}`$
 
 $`\phi = Atan2(sin(\phi), cos(\phi))`$
+
+</div>
 
 Já para achar D3, temos que:
 
@@ -785,13 +910,20 @@ Já para achar D3, temos que:
   <img src="Figure_21.png" alt="Manipulador RR Planar (RoboticsToolBox)" width="50%">
 </p>
 
+<div align="center">
 $`-z = - D2 + D3 + D4 `$
 
 Então, $`D3 = -z - D4 + D2`$
 
+</div>
+
 É por último, como $`\theta4`$ só influencia na rotação do atuador, temos que:
 
+<div align="center">
+
 $`\theta4 = 0°`$
+
+</div>
 
 Aplicando no código:
 
