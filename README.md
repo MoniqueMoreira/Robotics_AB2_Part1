@@ -750,7 +750,7 @@ $` (\sqrt{x^2 +y^2})^2 = L1^2 + L2^2 - 2*L1*L2os(180° - \theta2) `$
 
 Deixando em função de $`cos(\theta3)`$
 
-$`cos(\theta2) = \frac{x^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
+$`cos(\theta3) = \frac{x^2 +y^2 - L1^2 - L2^2}{2*L1*L2}`$
 
 Usando a função trigonométrica:
 
@@ -758,9 +758,9 @@ $`cos(\theta)^2 + sin(\theta)^2 = 1`$
 
 Temos:
 
-$`sin(\theta2) = \sqrt{1 - Cos(\theta2)^2}`$
+$`sin(\theta3) = \sqrt{1 - Cos(\theta3)^2}`$
 
-$`\theta2 = Atan2(sin(\theta2), cos(\theta 2))`$
+$`\theta3 = Atan2(sin(\theta3), cos(\theta 3))`$
 
 Já para achar $`\theta2`$, temos que:
 
