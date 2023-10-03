@@ -883,6 +883,8 @@ $`sin(\theta3) = \sqrt{1 - Cos(\theta3)^2}`$
 
 $`\theta2 = Atan2(sin(\theta2), cos(\theta 2))`$
 
+</div>
+
 Já para achar $`\theta2`$, temos que:
 
 <div align="center">
@@ -927,7 +929,7 @@ Já para achar D3, temos que:
 <div align="center">
 $`-z = - D2 + D3 + D4 `$
 
-Então, $`D3 = -z - D4 + D2`$
+ $`D3 = -z - D4 + D2`$
 
 </div>
 
